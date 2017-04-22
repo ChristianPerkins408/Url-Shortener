@@ -2,10 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 var mongodb = require('mongodb');
-var config = require('../config');
-var mLab = 'mongodb://' + config.db.host + '/' + config.db.name;
-var MongoClient = mongodb.MongoClient
 
+var mLab = process.env.HOST;
+var MongoClient = require('mongodb').MongoClient;
+require('dotenv').config({ silent: true });
 var shortid = require('shortid');
 var validUrl = require('valid-url');
 
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/new/:url(*)', function (req, res, next) {
-  MongoClient.connect(mLab, function (err, db) {
+  MongoClient.connect( 'mongodb://ChristianPerkins408:Blacklist35@ds147920.mlab.com:47920/url-shortener', function (err, db) {
     if (err) {
       console.log("Unable to connect to server", err);
     } else {
@@ -23,6 +23,7 @@ router.get('/new/:url(*)', function (req, res, next) {
 
       var collection = db.collection('links');
       var params = req.params.url;
+      console.log(req.params);
 
       var local = req.get('host') + "/";
 
@@ -56,7 +57,7 @@ router.get('/new/:url(*)', function (req, res, next) {
 
 router.get('/:short', function (req, res, next) {
 
-  MongoClient.connect(mLab, function (err, db) {
+  MongoClient.connect('mongodb://ChristianPerkins408:Blacklist35@ds147920.mlab.com:47920/url-shortener', function (err, db) {
     if (err) {
       console.log("Unable to connect to server", err);
     } else {
